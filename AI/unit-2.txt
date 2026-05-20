@@ -1,0 +1,64 @@
+Unit-2
+ Problem Solving by Searching
+Problem solving in AI is a systematic search through a range of possible action in order to reach some predefined goals or solutions.
+There are four general states in problem solving which are as follows:
+Goal formulation: A goal is a agent that the agent is trying to reach
+Problem formulation:  the process of deciding what actions and states and goal to consider
+search method: It determines possible sequence of actions and choose the best one
+Execute:it provides the solution to perform actions
+(state space: collection of all states)
+
+Searching:
+problem formulation : In AI it is the process of defining problem in a way that a computer can understand and solve it using AI techniquies-especially search algorithms.
+
+- Component of problem formulation:
+-Initial state: the starting point of the problem
+- state spaces: all possible states reachable from the initial state
+-actions: legal movees or operations that can be performed
+- transition model: describes what results from performing an aciton in a state
+-goal test: check whether a given state is a goal state
+-path cost:(optional):A numeric cost for a path, used in optimization.
+(Transition model: a to b or b to a )
+#State Space representation
+               a
+             /    \
+            b      c
+           / \      \
+           d  e      f
+
+S={S,A,Actions(s),Result(s,a),cost(s,a)}
+where,
+S=starting/initial state
+A=possible actions
+A(s)= garna milne actions on that specific state/action performed in a particular state
+Result(s,a)= after performing that particular actions what wwas the result
+cost(s,a)= what cost did it take to reach that state
+Every state has its own state space representation
+#well defined problems
+a problems that lacks one or more of the properties in an ill defined problem
+bute a well defined problem can be defined formally by following five compoments:
+initial state:
+state description
+state space and path
+path cost 
+goal test
+fig:graph representation of map
+
+    d   g
+   / \ /
+  a   f
+ /   /
+s   e
+ \ /
+  b 
+
+#constraint satisfaction problem
+{V,D,C}
+3 parameters
+v=variable:v1,v2,v3,...
+d=domain of variable : d1,d2,d3,...
+domain defines what values or what type of values V will hold
+C =set of constrains that specify combination of variables
+C1={scope,relations}
+C1={v2,v3,v2!=v3}
+end of the day 2082/02/05

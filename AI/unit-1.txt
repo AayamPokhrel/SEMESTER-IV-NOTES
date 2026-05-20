@@ -1,0 +1,53 @@
+Intelligence
+Intelligence in AI refers to the ability of machines (computers or software) to perform tasks that normally require human intelligence
+This includes:
+- Understanding the language
+- Learning
+- reasoning
+- making decisions
+- problem solving
+
+Types of AI intelligence
+
+1. Narrow AI(weak AI)
+- Designed for specific tasks
+- Example: Voice assistants, recommendation systems
+2. General AI(not fully developed yet)
+- Can perform any intellectual task like a human
+3. Super AI
+- Hpothetical AI that surpasses human intelligence
+
+Intelligent Behavior
+- Intelligence is the capacity, while intelligent behaviour is the expression of that capacity
+- To know if a system is intelligent, it is done by observing its intelligent behaviour
+- Intelligence = ability
+- Intelligent behaviour = result of that ability
+- parameter   to test the intelligence of that machine
+
+Understanding AI based on thought process and behavior
+
+Acting humanly(Turing test):
+- The test involves an interrogator who interacts with the human and one machine
+- Within a given time the interrogator has to  find out which of the two the human is, and which one the machine
+- The computer passes the test if a human interrogator after posing some written questions, cannot tell wether the wirtten response come from huhman or not
+Thinking Humanly:
+- Congnitive science: how human thinks at given situations
+- Uses congnitive Modeling approach: develop Algorithm whiich sayys how human brain thinks and then we can develop a machines as human thinks
+- But there is no any algorithm which clearly says how machine thinks
+
+Human mind works in two ways:
+- Through interospection
+- Psychological experiments
+
+Thinking rationally
+- Acting rationally
+- rationally means rightly
+- doing tasks rightly and behaving rightly (100% aaune questions)
+- It follows rational afent approach
+
+Applications of AI
+-Data Security
+- Social Media
+- 
+
+
