@@ -1,0 +1,70 @@
+Definition
+Knowledge definition and reasoaning.
+Facts= Universal truth
+Skills= Information that was learned from someone or something by help or watching or doing by itself
+such knowlege are to be saved in machine's memory.
+The process of saving such knowledges in machine's memory is called knowledge representation.
+To make a machine intelligent, we need to provide machine.
+Knowledge is a facts, skills, which is called from our experience and itelligence is ability to use that knowlege.
+Reasoaning is a processsing of knowledge by fetching saved knowledge, skills and experince from memory.
+Eg: when we jump from 5 storey building,we eill break our legs' which is called knowledge
+If we jump anyway then we are not intelligent, and it we don't we are intelligent.
+Intelligent machine is a machine that processes its memory at right time and takes right decision.
+Our target is to put knowledge inside machine so that at right time machine can take decision by taking that knowledge.
+If we put incorrect knowledge inside machine then, our machine will perform wrong, similarly machine will perform right ig we put right knowledge.
+If we cannot represent knowledge properly, then there can be error like:
+-Syntax error: grammatical error eg: I taking food
+-Symantic error: wrong meaning eg: I eat bus inside noodhis les.
+So if we do this syntax and semantic error less then, machine can understand knowledge properly, and to store knowledge inside machine memroy is called memory representation,
+
+So to present knowledge in machine thenre are following ways":
+-Prepositional logic: True or false state
+- Predicate logic: For all, there exists. To do this quantifiers are used.
+Rules : if then
+Semantic Net: semantic means meaning and net means graph so semantic net means meaningful graph eg: google graphs
+Frames: here object are stored in slots and attributes are stored in fillers. 
+Scripts: The script is a written sequence of tasks1 to perform certain job.
+
+Issues in knowledge representation 
+
+Main objective of knowledge representation is to draw conclusion frfom knowledge and to make machine take right decision based on its knowledge.
+But there are some issues in knowledge representation:
+Important attributes
+any attributes that 
+
+Relationship among attributes:
+Inverse: it is used to check consistency when a value is added to an attribute:
+Eg: If ram is son of shyam then machine should add a new knowledge shyam is a father of ram
+
+When a value 
+
+
+Existence: used as "is a" to generalize they exist
+
+Choosing granuality:
+- To decide up to what level of knowldge can be represented and what are the primitives
+
+-eg: high detail car
+
+Set of objects: It can be represented by making set of similar properties
+
+Finding right structure:
+
+Selection of appropriate structure is necessary to represent knowledge in machine:
+given a large amount of knowledge stored in a  database, how can relevant parts are accessed when they are needed?
+
+Eg: if a machine know too count numbers and he can sum also those numbers. If we gave him cash to count the total amount of money then it should add each cash worth rather than counting and adding numerically. But, if we gave him to count number of ships then it should count them one by one.
+
+this is about access to right structure for describing a  partitcular situation.
+
+Knowledge based representation system:
+
+it is a container of facts, rules, heuristics, ontologies 
+
+Inference methods:
+It is a technique to derive a new knowledge or conclusions from existing knowledge base system.
+It can be inductive inferenceL
+Inferred rule
+Deductive inference.
+
+

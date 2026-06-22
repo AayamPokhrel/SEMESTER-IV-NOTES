@@ -62,3 +62,122 @@ C =set of constrains that specify combination of variables
 C1={scope,relations}
 C1={v2,v3,v2!=v3}
 end of the day 2082/02/05
+
+
+
+Intelligent agent 
+> An intelligent agent perceivers it environment cia sensors and acts rationally upon environment with its effectors(actuators).
+>Hence and agent gets percept one at a time, and maps this percept sequence to actions.
+
+>eg.
+ -based on t1: stop,red light 
+ -based on t2: light turned green, but there's a car ahead. Wait."
+ -based on t3: car ahead is moving, path is clear. Accelerate.
+ Updated percept sequence. =t1->t2->t3
+
+ - perception updates one time at a time.
+> eg of agent:
+- software agent >human agent >robotic agent
+
+
+env _> percept -> agent(with sensors and effectors)
+_________________________________________________<|
+
+Properties of an Intelligent agent.
+
+Internal Characteristics(LARG)
+>Learning: it has the ability to learn from pervious experience and successively adopts its behaviour to the environment
+>Reactivity: An agent must be capable of reacting approproately and accurately to information from it agent
+>Autonomy: an agent must be have both control over its actions and internala states
+>Goal oriented: and agent has well-defined goals and gradually influence it environment to acheive its goals
+
+External Characteristics(CCMC)
+>Communication: and agent often required interaction with its environment to fulfill its tasks, such as human and other agents
+> Cooperation: Cooperation of several agents provides better and faster solutions for complex tasks
+>Mobility: an agent must access data and transfer messages from other agents and send code to different devices
+>Characters: like human, an agent may demonstrate an external behaviour with many human characteristivs as possible
+
+
+Configurations of agent
+
+(PEAS)
+to design a rational agent we must specify ots task environment. Task environment means: PEAS descritopn
+-Performance
+-Environment 
+-Actuators 
+-Sensors
+
+let us consider a self driver car.
+performance: effectivebess,safe, fast, legal
+env: road traffics
+actuators - actions performer according to env changes
+sensor:camera, lidar, speedometer 
+
+For PEAS describe of agents lets make an example of fully automated taxi. Now the agent type becomes taxi driver and PEAS description of task environment for and automated taxi is:(same eg from above )
+
+Q. What is agent and what are the configurations of agent?
+
+Simple Reflex Agent(SPA)
+>  The simple reflex agent is the simples agent.
+>These agent take decision on the basis of the current percepts and ignore the rest of the percept history
+>These agents only suceed in the fully observable environment means all information about environment must be known.
+>The simple reflex agent works on condition-action rule, whoch means to maps the current state to action.
+i.e. if the condition is true , then aciton is taken else not
+>Such as room cleaner agent, it works only if there is dirt in the room
+>The problem with simple reflex agent is that they they hace very limited intelligence and they are not adaptive to changes in environment.
+
+Agent                       sensors
+
+
+                                |
+                                V
+
+
+Condition-action rules ->whatshould I do now
+
+Model-based Agents
+
+>The model-based agent can work in a partially observable environment and track the situation
+>A model based agent has two inportant factos
+ a. It is knowledge about "how things happen in the worls", and it is known by previous percepts history, so it is called a model-baed agent
+ Internal state
+ ......
+
+
+
+ fig...
+
+
+   state
+
+   How the worls evolves
+
+   what my actions do
+
+
+   Contition action rules 
+
+
+ Goal-Based Agents
+
+ >Goal-based agent expant the capabilitties of the midel-based agebt by having the "goal"information.
+ The knowledge of current state environment is not always sufficient to decide for an agent what to do
+ > the agent needs to know its goals whoch describes ..
+
+figg
+ 
+ Utility based agent 
+
+ Focus on utility not on goals
+ Utility funtion
+ Deals with happy and unhappy state
+ Target is to acheice goal but it also decides how happy agent will be after reaching that goal
+
+Environment types
+Deterministic vs stochastic
+Dynamic vs static
+
+Obervable vs semi-obervable
+single agent vs multiagent
+Discrete vs Continuous
+

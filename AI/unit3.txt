@@ -1,0 +1,51 @@
+Introduciton
+-problem solcing in AI is a systemativ search through a range of possible actioins in order to reach some predefined goal or solutions.
+-there are 4 genereal states
+>goal formulation
+>problem formulation
+>search method
+> ..
+
+Problem formulation
+In AI it is the probess of defining a problem in a wat that a computer can understand and solve it using AI techniques-especially search algorithhms.
+Component of problem formulation:
+>Iniitial State: The starting point of the problem
+>State space:All possible states reachable from the initial state
+>Actions: LEgal moves or operations that can be performed
+>Transition Model:Describes what results from performing an action in a state
+>Goal Test:Checks whether a given state os a goal state
+>Path cost:(optional):a numerric cost for a path, used in optimization
+ Simple Hill climbing search algorithm
+ >Local search algorithm
+ >own domain knowledge
+ >Greedy approach-> best move followup
+ >Does not allow backtracking
+>multiple solution problem is where this algorithm is used.
+Limitaitons:
+>Local maxima: Here, our rule is that our second step must be better than first step but when we reach at point A, we have to move to point B to reach to global maxima, as point B state is not better than state A, so it stops at point A so it steps at point A so it is local maxima
+Solution we use simulated annealing which means, it lets us know if we can travel to the lower state than we are.
+>Global maxima:
+>Plateau: here while moving forward the step A,B,C,D is at same position/state, so it does not move forward so it stops at point A.
+SOlutions: travel directly to the last state of same state, then consider different state that means we take a huge leap of jump if the states are same then restart
+>Ridge:while moving forward if we reach to a point which is not the direction/state we wanted,and to reach goal we must backtrack, however we cannot backtrack in hill climbing algorithm and we stop at that point. for example, we are moving towards NE and later we realized the correct direction is towards. Since, hill climbing algorithm does not allow backtracking, we stop on the NE.
+> Solution of ridge: Allow backtracking 
+
+Min/Max Search Tree:
+
+
+Bidirectional Search:
+
+
+
+     B            G
+    /  \        /   \
+start->A     D --E--F      H<- end
+   \    /       \     /
+      C            I
+
+Two simultaneous search state from start to goal state and backwards from goal state to the initial state and stopping when to search meet each other is called bidirectional seach
+Its time complexity is 2(b^(d/2))
+It is complete in breadth first search but incomplete in depth first search.
+
+
+
