@@ -54,7 +54,7 @@ fn str_01_validation(str: &str) -> bool {
 fn string_processor(str: &str) {
     println!("Since,\"ε\" also occurs in the language (L), initial state is also one of the final state.");
     println!("Initial state: ->*q0");
-    println!("Final states: ->*q0, *q1, *q2, q3");
+    println!("Final states: ->*q0, *q1, *q2, *q3");
     println!("Dead state: qd");
     let mut current_state: &str = "->*q0";
     let mut i: usize = 0;

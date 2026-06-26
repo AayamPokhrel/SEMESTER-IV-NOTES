@@ -84,7 +84,7 @@ fn main() {
                 }
             }
         } else {
-            for j in i+1..=strlen {
+            for j in i + 1..=strlen {
                 let substring = &str[i..j];
                 println!("{substring}");
             }
