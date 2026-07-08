@@ -902,6 +902,495 @@ function Backtrack(assignment, csp)
     return failure
 ```
 
+## Additional Expanded Notes, Trees, Graphs, and Worked Examples
+
+### Formal Problem Definition With Symbols
+
+A search problem can be defined as:
+
+```text
+P = (S, A, T, s0, G, c)
+```
+
+Where:
+
+- `S` is the set of all states.
+- `A` is the set of all actions.
+- `T` is the transition model.
+- `s0 ∈ S` is the initial state.
+- `G ⊆ S` is the set of goal states.
+- `c(s, a, s')` is the step cost from `s` to `s'` using action `a`.
+
+Transition model:
+
+```text
+T(s, a) = s'
+```
+
+Path cost:
+
+```text
+g(n) = Σ c(si, ai, si+1)
+```
+
+Here, `Σ` means summation of all step costs along the path.
+
+Goal test:
+
+```text
+Goal-Test(s) = True iff s ∈ G
+```
+
+### State Space vs Search Tree Example
+
+State space graph:
+
+```text
+      A
+     / \
+    B---C
+     \ /
+      D
+```
+
+Search tree from `A` may repeat states because the same state can be reached through different paths:
+
+```text
+          A
+        /   \
+       B     C
+      / \   / \
+     C   D B   D
+     |
+     D
+```
+
+This is why graph search uses an explored set.
+
+### Map Search Worked Example
+
+Weighted graph:
+
+```text
+        4
+   S ------- A
+   |         |
+ 2 |         | 5
+   |         |
+   B ------- E
+    \   3   /
+   6 \     / 4
+      \   /
+        F ------- G
+            3
+```
+
+Possible paths from `S` to `G`:
+
+| Path | Cost |
+|---|---:|
+| `S -> B -> F -> G` | `2 + 6 + 3 = 11` |
+| `S -> A -> E -> F -> G` | `4 + 5 + 4 + 3 = 16` |
+| `S -> B -> E -> F -> G` | `2 + 3 + 4 + 3 = 12` |
+
+The least-cost path is:
+
+```text
+S -> B -> F -> G
+```
+
+with total cost:
+
+```text
+g(G) = 11
+```
+
+### Frontier Behavior by Strategy
+
+| Strategy | Data Structure | Node Selected Next |
+|---|---|---|
+| BFS | FIFO queue | Oldest shallowest node |
+| DFS | LIFO stack | Newest deepest node |
+| UCS | Priority queue | Lowest `g(n)` |
+| Greedy best-first | Priority queue | Lowest `h(n)` |
+| A* | Priority queue | Lowest `f(n) = g(n) + h(n)` |
+
+### BFS and DFS Expansion Example
+
+Tree:
+
+```text
+          S
+       /  |  \
+      A   B   C
+     / \     / \
+    D   E   F   G
+```
+
+BFS order:
+
+```text
+S, A, B, C, D, E, F, G
+```
+
+DFS order, left to right:
+
+```text
+S, A, D, E, B, C, F, G
+```
+
+If `G` is the goal, BFS reaches it at depth `2`, while DFS may explore deep left branches first.
+
+### Uniform Cost Search Worked Trace
+
+Graph:
+
+```text
+      2       5
+  S ---- A ------- G
+  |      |
+4 |      | 1
+  |      |
+  B ---- C ------- G
+      1       3
+```
+
+Step-by-step frontier:
+
+| Step | Expanded | Frontier after expansion |
+|---:|---|---|
+| 1 | `S(0)` | `A(2), B(4)` |
+| 2 | `A(2)` | `C(3), B(4), G(7)` |
+| 3 | `C(3)` | `B(4), G(6), G(7)` |
+| 4 | `B(4)` | `G(6), G(7)` |
+| 5 | `G(6)` | Goal found |
+
+Optimal path:
+
+```text
+S -> A -> C -> G
+```
+
+Cost:
+
+```text
+2 + 1 + 3 = 6
+```
+
+### Bidirectional Search Diagram
+
+```text
+Forward search:   S -> A -> B
+                              \
+                               M
+                              /
+Backward search:  G -> F -> E
+```
+
+The searches meet at `M`. Instead of exploring approximately `b^d` nodes, each side explores about `b^(d/2)` nodes.
+
+### Heuristic Quality
+
+For a heuristic `h(n)`:
+
+```text
+h(n) = 0
+```
+
+makes A* behave like Uniform Cost Search.
+
+If:
+
+```text
+h1(n) ≤ h2(n) ≤ h*(n)
+```
+
+then `h2` dominates `h1` because it is closer to the true cost without overestimating.
+
+Here:
+
+- `h*(n)` is the actual optimal cost from `n` to the goal.
+- A dominating heuristic usually expands fewer nodes.
+
+### 8-Puzzle Heuristic Examples
+
+State:
+
+```text
+Initial:              Goal:
+1 2 3                 1 2 3
+4 _ 6                 4 5 6
+7 5 8                 7 8 _
+```
+
+Misplaced tile heuristic:
+
+```text
+h1(n) = number of misplaced tiles
+```
+
+Here:
+
+```text
+Tiles 5 and 8 are misplaced, so h1(n) = 2
+```
+
+Manhattan distance heuristic:
+
+```text
+h2(n) = Σ |currentRow(tile) - goalRow(tile)| + |currentCol(tile) - goalCol(tile)|
+```
+
+For this state:
+
+```text
+Tile 5 distance = 1
+Tile 8 distance = 1
+h2(n) = 2
+```
+
+Both are admissible because they do not overestimate the true number of moves.
+
+### Greedy Best-First vs A* Example
+
+Suppose:
+
+```text
+Path S -> A -> G:
+g(A) = 10, h(A) = 1, f(A) = 11
+
+Path S -> B -> G:
+g(B) = 2, h(B) = 4, f(B) = 6
+```
+
+Greedy best-first chooses `A` first because:
+
+```text
+h(A) = 1 < h(B) = 4
+```
+
+A* chooses `B` first because:
+
+```text
+f(B) = g(B) + h(B) = 6
+f(A) = g(A) + h(A) = 11
+```
+
+This shows why greedy search can be fast but non-optimal, while A* balances cost so far and estimated cost remaining.
+
+### A* Search Tree Example
+
+```text
+             S
+          /     \
+     A(g=2,h=5)  B(g=4,h=2)
+        f=7         f=6
+       /              \
+  G(g=9,h=0)       G(g=7,h=0)
+      f=9              f=7
+```
+
+A* expands:
+
+```text
+S -> B -> G
+```
+
+because `B` has the lower `f(n)` value.
+
+### Hill Climbing Landscape
+
+```text
+Value
+  ^
+  |                         Global maximum
+  |                              /\
+  |                             /  \
+  |       Local maximum        /    \
+  |            /\             /      \
+  |           /  \___ plateau/        \
+  |      ____/                         \__
+  +----------------------------------------> State
+```
+
+Problems:
+
+- Local maximum: better than neighbors but not globally best.
+- Plateau: neighbors have same value.
+- Ridge: improvement requires indirect movement.
+
+Solutions:
+
+- Random-restart hill climbing
+- Sideways moves
+- Simulated annealing
+- Stochastic local search
+
+### Simulated Annealing Acceptance
+
+For a worse move, simulated annealing may accept it with probability:
+
+```text
+P(accept) = e^(-ΔE / T)
+```
+
+Where:
+
+- `ΔE` is the amount by which the move is worse.
+- `T` is temperature.
+
+If `T` is high, the algorithm explores more. If `T` is low, it behaves more like hill climbing.
+
+### Minimax Worked Tree
+
+Game tree from MAX's point of view:
+
+```text
+                         A (MAX)
+                  /         |         \
+              B (MIN)     C (MIN)    D (MIN)
+             /   |  \      /  \       /   \
+            5    3   9    2    7     4     6
+```
+
+MIN nodes choose the minimum:
+
+```text
+B = min(5, 3, 9) = 3
+C = min(2, 7) = 2
+D = min(4, 6) = 4
+```
+
+MAX chooses the maximum:
+
+```text
+A = max(3, 2, 4) = 4
+```
+
+Best move for MAX:
+
+```text
+A -> D
+```
+
+### Alpha-Beta Pruning Trace
+
+```text
+α = best value found so far for MAX
+β = best value found so far for MIN
+Prune when α ≥ β
+```
+
+Example:
+
+```text
+                MAX
+              /     \
+            MIN     MIN
+           / | \    / | \
+          3  5  6  2  ?  ?
+```
+
+After left MIN returns `3`, MAX has:
+
+```text
+α = 3
+```
+
+In the right MIN branch, first child gives `2`, so:
+
+```text
+β = 2
+```
+
+Since:
+
+```text
+β ≤ α
+2 ≤ 3
+```
+
+the remaining children of the right MIN branch can be pruned.
+
+### CSP Formal View
+
+A CSP is:
+
+```text
+CSP = (X, D, C)
+```
+
+Where:
+
+- `X = {X1, X2, ..., Xn}` is a set of variables.
+- `D = {D1, D2, ..., Dn}` is a set of domains.
+- `C = {C1, C2, ..., Cm}` is a set of constraints.
+
+A complete assignment is:
+
+```text
+{X1 = v1, X2 = v2, ..., Xn = vn}
+```
+
+A solution is a complete assignment satisfying all constraints:
+
+```text
+∀Ci ∈ C, assignment satisfies Ci
+```
+
+### Map Coloring CSP Diagram
+
+```text
+        A
+       / \
+      B---C
+       \ /
+        D
+```
+
+Variables:
+
+```text
+X = {A, B, C, D}
+```
+
+Domain:
+
+```text
+D(A) = D(B) = D(C) = D(D) = {Red, Green, Blue}
+```
+
+Constraints:
+
+```text
+A ≠ B
+A ≠ C
+B ≠ C
+B ≠ D
+C ≠ D
+```
+
+One valid assignment:
+
+```text
+A = Red
+B = Green
+C = Blue
+D = Red
+```
+
+### Search Strategy Selection Guide
+
+| Situation | Suitable Strategy | Reason |
+|---|---|---|
+| Small unweighted graph | BFS | Finds shallowest solution |
+| Very large depth and memory is limited | DFS or IDS | DFS saves memory; IDS is safer |
+| Different path costs | UCS | Finds least-cost path |
+| Good heuristic available | A* | Complete and optimal with admissible heuristic |
+| Optimization with many possible solutions | Hill climbing or simulated annealing | Avoids full state-space enumeration |
+| Two-player zero-sum game | Minimax with alpha-beta | Handles adversarial decisions |
+| Variables with constraints | CSP backtracking | Directly checks consistency |
+
 ## Search Strategy Summary
 
 | Strategy | Complete | Optimal | Time | Space |
@@ -939,4 +1428,3 @@ Uninformed search uses only the problem definition, while informed search uses a
 ### Why is A* search optimal?
 
 A* search is optimal when its heuristic is admissible and consistent because it expands paths according to the estimated total cost `f(n) = g(n) + h(n)` without overestimating the remaining cost.
-

@@ -1363,6 +1363,606 @@ Fuzzy logic is used in:
 - Risk analysis
 - Traffic control
 
+## Additional Expanded Notes, Symbolic Forms, and Worked Examples
+
+### Data, Information, Knowledge, and Intelligence
+
+| Level | Meaning | Example |
+|---|---|---|
+| Data | Raw facts without context | `38.5` |
+| Information | Data with meaning | Body temperature is `38.5°C` |
+| Knowledge | Interpretable rule or fact | Fever may indicate infection |
+| Intelligence | Correct use of knowledge | Recommend medical checkup when fever and other symptoms appear |
+
+### Knowledge Representation Pipeline
+
+```text
+Real-world fact
+      |
+      v
+Natural language statement
+      |
+      v
+Formal representation
+      |
+      v
+Knowledge base
+      |
+      v
+Inference engine
+      |
+      v
+Conclusion / action
+```
+
+Example:
+
+```text
+Natural language: Every student studies.
+Formal form: ∀x (Student(x) → Studies(x))
+Fact: Student(Ram)
+Conclusion: Studies(Ram)
+```
+
+### Syntax vs Semantics in KR
+
+| Concept | Meaning | Example |
+|---|---|---|
+| Syntax | Rules for valid structure | `P ∧ Q` is syntactically valid |
+| Semantics | Meaning or truth of expression | `P ∧ Q` is true only when both `P` and `Q` are true |
+
+Invalid syntax:
+
+```text
+∧ P Q →
+```
+
+Valid syntax but possibly false semantics:
+
+```text
+Fish(Cow)
+```
+
+### Semantic Net With Inheritance
+
+```text
+             Animal
+               ^
+              is-a
+               |
+              Bird ----has----> Wings
+               ^
+              is-a
+               |
+            Canary ----color---> Yellow
+```
+
+Inference through inheritance:
+
+```text
+Canary is-a Bird
+Bird is-a Animal
+Bird has Wings
+Therefore, Canary has Wings
+```
+
+Symbolically:
+
+```text
+isA(Canary, Bird) ∧ isA(Bird, Animal) → isA(Canary, Animal)
+```
+
+### Frame Example With Defaults and Override
+
+```text
+Frame: Bird
+    is-a: Animal
+    wings: 2
+    covering: feathers
+    canFly: true
+
+Frame: Penguin
+    is-a: Bird
+    canFly: false
+    habitat: cold region
+```
+
+Because `Penguin` is a `Bird`, it inherits:
+
+```text
+wings = 2
+covering = feathers
+```
+
+But it overrides:
+
+```text
+canFly = false
+```
+
+### Production System Cycle
+
+```text
+Working memory + Rule base
+          |
+          v
+    Match rules
+          |
+          v
+ Resolve conflict
+          |
+          v
+    Fire rule
+          |
+          v
+ Update working memory
+```
+
+Example rules:
+
+```text
+R1: Fever(x) ∧ Cough(x) → Flu(x)
+R2: Flu(x) → NeedsRest(x)
+R3: NeedsRest(x) → Advise(x, "drink fluids and rest")
+```
+
+Fact:
+
+```text
+Fever(Ram), Cough(Ram)
+```
+
+Forward chaining derives:
+
+```text
+Flu(Ram)
+NeedsRest(Ram)
+Advise(Ram, "drink fluids and rest")
+```
+
+### Propositional Logic Symbol Table
+
+| Plain Text | Symbol | Name | Example |
+|---|---|---|---|
+| not | `¬` | Negation | `¬P` |
+| and | `∧` | Conjunction | `P ∧ Q` |
+| or | `∨` | Disjunction | `P ∨ Q` |
+| implies | `→` | Implication | `P → Q` |
+| if and only if | `↔` | Biconditional | `P ↔ Q` |
+| therefore | `∴` | Conclusion | `P, P → Q ∴ Q` |
+| entails | `⊨` | Logical entailment | `KB ⊨ α` |
+| proves | `⊢` | Derivability | `KB ⊢ α` |
+
+### Entailment
+
+Entailment means a conclusion logically follows from the knowledge base.
+
+```text
+KB ⊨ α
+```
+
+Meaning:
+
+In every model where `KB` is true, `α` is also true.
+
+Example:
+
+```text
+KB = {P → Q, P}
+α = Q
+KB ⊨ Q
+```
+
+### CNF Conversion Rules
+
+Resolution usually requires Conjunctive Normal Form.
+
+Rules:
+
+```text
+P → Q          ≡ ¬P ∨ Q
+P ↔ Q          ≡ (P → Q) ∧ (Q → P)
+¬(P ∧ Q)       ≡ ¬P ∨ ¬Q
+¬(P ∨ Q)       ≡ ¬P ∧ ¬Q
+P ∨ (Q ∧ R)    ≡ (P ∨ Q) ∧ (P ∨ R)
+```
+
+Example:
+
+```text
+(P → Q) ∧ P
+≡ (¬P ∨ Q) ∧ P
+```
+
+### Resolution Worked Example
+
+Prove:
+
+```text
+Q
+```
+
+Knowledge base:
+
+```text
+P → Q
+R → P
+R
+```
+
+Convert to clauses:
+
+```text
+¬P ∨ Q
+¬R ∨ P
+R
+¬Q        ; negated goal
+```
+
+Resolution:
+
+```text
+¬P ∨ Q, ¬Q      => ¬P
+¬R ∨ P, ¬P      => ¬R
+R, ¬R           => □
+```
+
+`□` is the empty clause, so `Q` is proved by contradiction.
+
+### Forward vs Backward Chaining
+
+| Feature | Forward Chaining | Backward Chaining |
+|---|---|---|
+| Direction | Facts to conclusion | Goal to supporting facts |
+| Also called | Data-driven | Goal-driven |
+| Search style | Often breadth-like rule firing | Often depth-first proof search |
+| Good for | Deriving all possible conclusions | Answering a specific query |
+| Example system | Monitoring and alert systems | Diagnosis and theorem proving |
+
+### Predicate Logic Symbol Examples
+
+Universal statement:
+
+```text
+∀x (Student(x) → Human(x))
+```
+
+Existential statement:
+
+```text
+∃x (Student(x) ∧ Likes(x, AI))
+```
+
+Nested quantifier example:
+
+```text
+∀x ∃y Loves(x, y)
+```
+
+Meaning:
+
+Everyone loves someone.
+
+Different meaning:
+
+```text
+∃y ∀x Loves(x, y)
+```
+
+Meaning:
+
+There exists someone whom everyone loves.
+
+So:
+
+```text
+∀x ∃y Loves(x, y) ≠ ∃y ∀x Loves(x, y)
+```
+
+### Quantifier Properties
+
+Equivalent:
+
+```text
+∀x∀y P(x, y) ≡ ∀y∀x P(x, y)
+∃x∃y P(x, y) ≡ ∃y∃x P(x, y)
+```
+
+Not generally equivalent:
+
+```text
+∀x∃y P(x, y) ≠ ∃y∀x P(x, y)
+```
+
+Negation rules:
+
+```text
+¬∀x P(x) ≡ ∃x ¬P(x)
+¬∃x P(x) ≡ ∀x ¬P(x)
+```
+
+### Unification Examples
+
+| Expression 1 | Expression 2 | Substitution |
+|---|---|---|
+| `Knows(Ram, x)` | `Knows(Ram, Sita)` | `{x/Sita}` |
+| `Parent(x, Sita)` | `Parent(Ram, y)` | `{x/Ram, y/Sita}` |
+| `Likes(x, x)` | `Likes(Ram, Sita)` | Fails because `x` cannot be both `Ram` and `Sita` |
+
+Most general unifier:
+
+```text
+MGU(Knows(Ram, x), Knows(y, Sita)) = {y/Ram, x/Sita}
+```
+
+### FOPL Resolution With Symbols
+
+Knowledge:
+
+```text
+∀x (Human(x) → Mortal(x))
+Human(Socrates)
+```
+
+Goal:
+
+```text
+Mortal(Socrates)
+```
+
+Clauses:
+
+```text
+¬Human(x) ∨ Mortal(x)
+Human(Socrates)
+¬Mortal(Socrates)
+```
+
+Resolution:
+
+```text
+¬Human(x) ∨ Mortal(x)
+¬Mortal(Socrates)
+Substitution: {x/Socrates}
+=> ¬Human(Socrates)
+
+¬Human(Socrates)
+Human(Socrates)
+=> □
+```
+
+Therefore:
+
+```text
+Mortal(Socrates)
+```
+
+### Why Uncertainty Needs Probability
+
+A strict logical rule such as:
+
+```text
+Toothache → Cavity
+```
+
+is too strong because a toothache may be caused by gum disease, injury, sensitivity, or other causes.
+
+A probabilistic version is more realistic:
+
+```text
+P(Cavity | Toothache) = 0.65
+```
+
+This means:
+
+Given toothache, the probability of cavity is 65 percent, not 100 percent.
+
+### Probability Rules
+
+Product rule:
+
+```text
+P(A ∧ B) = P(A | B)P(B)
+```
+
+Bayes' rule:
+
+```text
+P(A | B) = P(B | A)P(A) / P(B)
+```
+
+Normalization:
+
+```text
+P(A | B) = α P(B | A)P(A)
+```
+
+where `α` is a normalizing constant.
+
+Total probability:
+
+```text
+P(B) = Σ_i P(B | Ai)P(Ai)
+```
+
+when `{A1, A2, ..., An}` is an exhaustive and mutually exclusive set.
+
+### Full Joint Distribution Example
+
+Variables:
+
+```text
+Cloudy ∈ {T, F}
+Rain ∈ {T, F}
+WetGrass ∈ {T, F}
+```
+
+One full joint entry:
+
+```text
+P(Cloudy=T, Rain=T, WetGrass=T)
+```
+
+Query by summing:
+
+```text
+P(Rain=T) = Σ_c Σ_w P(c, Rain=T, w)
+```
+
+This is called marginalization.
+
+### Bayesian Network Factorization
+
+For a Bayesian network:
+
+```text
+Rain -> WetGrass <- Sprinkler
+Rain -> Sprinkler
+```
+
+The joint distribution can be factored as:
+
+```text
+P(Rain, Sprinkler, WetGrass)
+= P(Rain) P(Sprinkler | Rain) P(WetGrass | Rain, Sprinkler)
+```
+
+Example:
+
+```text
+P(WetGrass ∧ Sprinkler ∧ Rain)
+= P(WetGrass | Sprinkler, Rain) P(Sprinkler | Rain) P(Rain)
+```
+
+If:
+
+```text
+P(WetGrass | Sprinkler, Rain) = 0.99
+P(Sprinkler | Rain) = 0.01
+P(Rain) = 0.20
+```
+
+Then:
+
+```text
+P(WetGrass ∧ Sprinkler ∧ Rain)
+= 0.99 × 0.01 × 0.20
+= 0.00198
+```
+
+### Belief Network Reasoning Types
+
+| Reasoning Type | Direction | Example |
+|---|---|---|
+| Predictive | Cause to effect | Rain observed, infer wet grass |
+| Diagnostic | Effect to cause | Wet grass observed, infer rain |
+| Intercausal | Between competing causes | Wet grass observed and sprinkler known, reduce belief in rain |
+| Mixed | Multiple directions | Symptoms and test results infer disease |
+
+### Decision Theory
+
+Decision theory combines probability and utility:
+
+```text
+Decision Theory = Probability Theory + Utility Theory
+```
+
+Expected utility:
+
+```text
+EU(a) = Σ_s P(s | a, evidence) U(s)
+```
+
+Best action:
+
+```text
+a* = argmax_a EU(a)
+```
+
+Example:
+
+A medical AI should not only choose the most probable disease; it should also consider risk, treatment cost, and harm of wrong treatment.
+
+### Fuzzy Logic Membership Graph
+
+Example fuzzy set: `Hot temperature`
+
+```text
+μHot(x)
+1.0 |                         ______
+    |                       /
+0.5 |              ________/
+    |            /
+0.0 |___________/
+    +------------------------------> Temperature
+       10     20     30     40
+```
+
+Here:
+
+```text
+μHot(20°C) = 0.0
+μHot(30°C) = 0.5
+μHot(40°C) = 1.0
+```
+
+### Fuzzy Operations
+
+For membership values `a` and `b`:
+
+```text
+μA∧B(x) = min(μA(x), μB(x))
+μA∨B(x) = max(μA(x), μB(x))
+μ¬A(x) = 1 - μA(x)
+```
+
+Example:
+
+```text
+μHot(Temperature) = 0.7
+μHumid(Humidity) = 0.6
+μHot∧Humid = min(0.7, 0.6) = 0.6
+```
+
+### Fuzzy Controller Example
+
+Rules:
+
+```text
+R1: IF temperature is cold THEN fan_speed is low
+R2: IF temperature is warm THEN fan_speed is medium
+R3: IF temperature is hot THEN fan_speed is high
+```
+
+Input:
+
+```text
+Temperature = 32°C
+μWarm(32) = 0.6
+μHot(32) = 0.4
+```
+
+Output:
+
+```text
+Medium fan speed activated to degree 0.6
+High fan speed activated to degree 0.4
+```
+
+After defuzzification, the crisp fan speed may be:
+
+```text
+Fan speed = 65%
+```
+
+### Logic Type Comparison
+
+| Logic Type | Truth Value | Handles Uncertainty? | Example |
+|---|---|---|---|
+| Boolean logic | `0` or `1` | No | `Rain=True` |
+| Probabilistic logic | Probability from `0` to `1` | Yes, random uncertainty | `P(Rain)=0.7` |
+| Fuzzy logic | Degree of truth from `0` to `1` | Yes, vagueness | `μHot(35°C)=0.8` |
+
 ## Summary of Knowledge Representation Types
 
 | Type | Representation | Best For |
@@ -1417,4 +2017,3 @@ P(A | B) = [P(B | A) P(A)] / P(B)
 ### What is fuzzy logic?
 
 Fuzzy logic is a reasoning method that allows partial truth values between 0 and 1. It is useful for vague concepts such as hot, tall, fast, and high risk.
-

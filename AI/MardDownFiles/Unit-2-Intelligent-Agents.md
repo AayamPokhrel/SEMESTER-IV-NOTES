@@ -591,6 +591,278 @@ A robot exploring a new building.
 | Medical diagnosis | Partially | Stochastic | Dynamic | Mixed | Single-agent or multi-agent |
 | Vacuum cleaner | Partially | Deterministic or stochastic | Dynamic | Discrete | Single-agent |
 
+## Additional Expanded Notes, Diagrams, and Tables
+
+### Agent-Environment Interaction Loop
+
+An agent does not act only once. It continuously receives percepts, updates its knowledge, chooses an action, and changes the environment.
+
+```text
+        percepts                         actions
++----------------+                 +----------------+
+|  Environment   | ----sensors----> |     Agent      |
+|                | <---actuators--- |                |
++----------------+                 +----------------+
+        ^                                  |
+        |                                  v
+        +---------- state changes ---------+
+```
+
+Mathematically, an agent function is:
+
+```text
+f: P* → A
+```
+
+Where:
+
+- `P*` is the set of all percept sequences.
+- `A` is the set of possible actions.
+- `f(p1, p2, ..., pt) = at` means the agent returns action `at` after percepts from time `1` to `t`.
+
+### Rational Agent Formula
+
+For each possible percept sequence, a rational agent selects the action that maximizes expected performance:
+
+```text
+a* = argmax_a E[PM | p1:t, K, a]
+```
+
+Where:
+
+- `a*` is the selected best action.
+- `PM` is the performance measure.
+- `p1:t` is the percept sequence from time `1` to `t`.
+- `K` is built-in or learned knowledge.
+- `E` means expected value because the environment may be uncertain.
+
+### What Rationality Depends On
+
+| Factor | Explanation | Example |
+|---|---|---|
+| Performance measure | Defines success | Safe, legal, fast taxi driving |
+| Prior knowledge | What the agent already knows | Traffic rules and road maps |
+| Available actions | What the agent can do | Brake, accelerate, steer |
+| Percept sequence | What the agent has observed so far | Red light, moving vehicles, weather |
+
+### Performance Measure vs Utility
+
+| Concept | Meaning | Example |
+|---|---|---|
+| Performance measure | External criterion used to judge agent behavior | Number of rooms cleaned, safety score |
+| Utility function | Internal numeric preference used by agent | `U(state) = 0.7 safety + 0.2 speed + 0.1 comfort` |
+
+### Vacuum Cleaner Agent Example
+
+State representation:
+
+```text
+State = (Location, StatusA, StatusB)
+Location ∈ {A, B}
+StatusA ∈ {Clean, Dirty}
+StatusB ∈ {Clean, Dirty}
+```
+
+Possible states:
+
+| State | Meaning |
+|---|---|
+| `(A, Dirty, Dirty)` | Agent in A, both rooms dirty |
+| `(A, Clean, Dirty)` | Agent in A, A clean, B dirty |
+| `(B, Clean, Dirty)` | Agent in B, A clean, B dirty |
+| `(B, Clean, Clean)` | Agent in B, both rooms clean |
+
+Simple condition-action rules:
+
+```text
+if Status(CurrentRoom) = Dirty then Suck
+else if Location = A then Right
+else if Location = B then Left
+```
+
+### Agent Type Comparison
+
+| Agent Type | Uses Current Percept | Uses Internal State | Uses Goal | Uses Utility | Learns |
+|---|---:|---:|---:|---:|---:|
+| Simple reflex | Yes | No | No | No | No |
+| Model-based reflex | Yes | Yes | No | No | No |
+| Goal-based | Yes | Usually | Yes | No | No |
+| Utility-based | Yes | Usually | Yes | Yes | No |
+| Learning agent | Yes | Usually | Usually | Usually | Yes |
+
+### Simple Reflex Agent Diagram
+
+```text
+Sensors
+  |
+  v
+Current percept
+  |
+  v
+Condition-action rules
+  |
+  v
+Action -> Actuators
+```
+
+Example:
+
+```text
+if Light = Red then Stop
+if Light = Green and FrontClear = True then Move
+```
+
+### Model-Based Agent Diagram
+
+```text
+             +-----------------------+
+Percept ---> | Update internal state | ---> Current state
+             +-----------------------+
+                         |
+                         v
+              Condition-action rules
+                         |
+                         v
+                       Action
+
+Internal state is updated using:
+1. How the world evolves
+2. What my actions do
+```
+
+Example:
+
+A delivery robot may remember:
+
+```text
+Visited(Room101) = True
+PackageDelivered(Room101) = True
+BatteryLevel = 42%
+```
+
+### Goal-Based Agent Search View
+
+Goal-based agents often need search and planning:
+
+```text
+Initial state
+    |
+    +-- action1 --> state1
+    |                  |
+    |                  +-- action3 --> goal
+    |
+    +-- action2 --> state2
+                       |
+                       +-- action4 --> failure
+```
+
+The selected action is the first step of a plan that reaches a desirable state.
+
+### Utility-Based Choice Example
+
+Suppose an automated taxi can choose three routes:
+
+| Route | Safety | Time | Comfort | Utility |
+|---|---:|---:|---:|---:|
+| R1 | 95 | 40 min | 80 | 86 |
+| R2 | 70 | 25 min | 60 | 68 |
+| R3 | 90 | 35 min | 90 | 88 |
+
+A goal-based agent may accept all routes because all reach the destination. A utility-based agent chooses `R3` because it has the highest utility.
+
+Example formula:
+
+```text
+U(route) = 0.5 Safety + 0.3 SpeedScore + 0.2 Comfort
+```
+
+### Learning Agent Feedback Cycle
+
+```text
+                 feedback
+                  +----+
+                  |    v
+Percepts -> Performance element -> Actions
+              ^          |
+              |          v
+       Learning element <- Critic
+              ^
+              |
+       Problem generator
+```
+
+Example:
+
+In a game-playing agent:
+
+- Performance element chooses moves.
+- Critic checks win/loss and move quality.
+- Learning element improves strategy.
+- Problem generator tries new moves for exploration.
+
+### More PEAS Examples
+
+| Agent | Performance | Environment | Actuators | Sensors |
+|---|---|---|---|---|
+| Spam filter | Correct classification, low false positives | Email inbox, sender data, message text | Mark spam, allow email, alert user | Email content, headers, user feedback |
+| Robot waiter | Safe delivery, correct order, speed | Restaurant, tables, customers, obstacles | Wheels, arm, tray, speaker | Camera, lidar, touch, microphone |
+| Stock trading agent | Profit, risk control, legal compliance | Market, prices, news, portfolio | Buy, sell, hold, notify | Price feed, news feed, financial indicators |
+| Medical assistant | Accuracy, safety, patient outcome | Patient records, symptoms, lab reports | Diagnosis suggestion, alert, report | User input, medical database, test results |
+
+### PAGE Example Table
+
+| Agent | Percepts | Actions | Goals | Environment |
+|---|---|---|---|---|
+| Chess agent | Board state, opponent move, clock | Move piece, resign, offer draw | Win or draw | Chess board and opponent |
+| Vacuum agent | Dirt, location, bump, battery | Move, suck, dock, stop | Clean rooms efficiently | Rooms and floor |
+| Navigation app | GPS, traffic, road closures | Suggest route, reroute, alert | Reach destination quickly | Roads, vehicles, map network |
+
+### Environment Type Matrix
+
+| Environment | Observable | Deterministic | Static | Discrete | Episodic | Agents |
+|---|---|---|---|---|---|---|
+| Crossword | Fully | Deterministic | Static | Discrete | Sequential | Single |
+| Chess | Fully | Deterministic | Static | Discrete | Sequential | Multi |
+| Poker | Partially | Stochastic | Static during move | Discrete | Sequential | Multi |
+| Taxi driving | Partially | Stochastic | Dynamic | Continuous | Sequential | Multi |
+| Image classification | Fully | Deterministic | Static | Discrete output | Episodic | Single |
+| Medical diagnosis | Partially | Stochastic | Dynamic | Mixed | Sequential | Multi |
+
+### Fully Observable vs Partially Observable Example
+
+```text
+Chess:
+∀ piece, position(piece) is visible to both players.
+Therefore, the environment is fully observable.
+
+Driving:
+∃ object around a corner such that the car's sensors cannot observe it.
+Therefore, the environment is partially observable.
+```
+
+Here:
+
+- `∀` means all.
+- `∃` means there exists.
+
+### Deterministic vs Stochastic Symbolic Form
+
+Deterministic transition:
+
+```text
+Result(s, a) = s'
+```
+
+The same state `s` and action `a` always produce the same next state `s'`.
+
+Stochastic transition:
+
+```text
+P(s' | s, a) ≠ 0 for multiple possible s'
+```
+
+The same action may lead to different next states with different probabilities.
+
 ## Key Terms
 
 - Agent: Entity that perceives and acts.
@@ -617,4 +889,3 @@ PEAS is a task environment description used in agent design. It stands for Perfo
 ### Why is a model-based agent better than a simple reflex agent?
 
 A model-based agent stores an internal state and can work in partially observable environments. A simple reflex agent depends only on the current percept and works best only when the environment is fully observable.
-
