@@ -155,9 +155,6 @@ int main()
 
     /* Compute ε-closure of initial state */
     curr_set = epsilon_closure(Q0_BIT);
-    printf("ε-closure of initial state {*q0} = ");
-    print_state_set(curr_set);
-    printf("\n");
 
     if (len == 0)
     {
@@ -167,21 +164,64 @@ int main()
         printf("The string \"ε\" is accepted by ε-NFA.\n");
         return 0;
     }
+    printf("\nProcessing the strings:\n");
 
-    printf("\nProcessing the string \"%s\":\n", input);
+    /* Show initial ε-closure: q0 --ε--> q1 always happens at the start */
+    printf("*q0 --- (ε) ---> *q1\n");
+
     for (i = 0; i < len; i++)
     {
+        /* Calculate the actual next state mathematically */
         int next_set = compute_next(curr_set, input[i]);
-        printf("  ");
-        print_state_set(curr_set);
-        printf(" --- (%c) ---> ", input[i]);
-        print_state_set(next_set);
-        printf("\n");
+
+        /* Print transition traces from current state set */
+        if (curr_set == (Q0_BIT | Q1_BIT))
+        {
+            if (input[i] == '0')
+            {
+                printf("*q0 --- (0) ---> *q0\n");
+                printf("*q1 --- (0) ---> Φ\n");
+                printf("*q0 --- (ε) ---> *q1\n");
+            }
+            else if (input[i] == '1')
+            {
+                printf("*q0 --- (1) ---> Φ\n");
+                printf("*q1 --- (1) ---> *q1\n");
+            }
+        }
+        else if (curr_set == Q0_BIT)
+        {
+            if (input[i] == '0')
+            {
+                printf("*q0 --- (0) ---> *q0\n");
+                printf("*q0 --- (ε) ---> *q1\n");
+            }
+            else if (input[i] == '1')
+            {
+                printf("*q0 --- (1) ---> Φ\n");
+            }
+        }
+        else if (curr_set == Q1_BIT)
+        {
+            if (input[i] == '0')
+            {
+                printf("*q1 --- (0) ---> Φ\n");
+            }
+            else if (input[i] == '1')
+            {
+                printf("*q1 --- (1) ---> *q1\n");
+            }
+        }
+        else if (curr_set == 0)
+        {
+            printf("Φ --- (%c) ---> Φ\n", input[i]);
+        }
+
         curr_set = next_set;
     }
 
     if (curr_set & ACCEPTING)
-        printf("The string \"%s\" is accepted by ε-NFA.\n", input);
+        printf("The string \"%s\" is accepted by the ε-NFA.\n", input);
     else
         printf("The string \"%s\" is not accepted by the ε-NFA.\n", input);
 

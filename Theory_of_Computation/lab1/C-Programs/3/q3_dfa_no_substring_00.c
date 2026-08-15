@@ -45,7 +45,6 @@ int main()
     }
 
     printf("Total defined states: {q0, q1, qd}\n");
-    printf("Since \"ε\" also occurs in the language (L), initial state is also one of the final states.\n");
     printf("Initial state: ->*q0\n");
     printf("Final states: *q0, *q1\n");
     printf("Dead state: qd\n");
