@@ -1,88 +1,34 @@
 #include <stdio.h>
 #include <string.h>
 
+#define PHI -1
+
 enum states { q0, q1, NUM_STATES };
 
 const char *state_names[] = { "*q0", "*q1" };
 
-#define Q0_BIT (1 << q0)
-#define Q1_BIT (1 << q1)
-
-#define ACCEPTING (Q0_BIT | Q1_BIT)
-
-/* Compute ε-closure of a state set */
-/* ε-transitions: q0 --ε--> q1 */
-int epsilon_closure(int state_set)
-{
-    if (state_set & Q0_BIT)
-        state_set |= Q1_BIT;
-    return state_set;
-}
-
-/* NFA transition (on input symbols only, no ε) */
-int nfa_delta(int state, char ch)
-{
-    switch (state)
-    {
-        case q0:
-            if (ch == '0') return Q0_BIT;  /* {q0} */
-            if (ch == '1') return 0;       /* Φ */
-            break;
-        case q1:
-            if (ch == '0') return 0;       /* Φ */
-            if (ch == '1') return Q1_BIT;  /* {q1} */
-            break;
-    }
-    return 0;
-}
-
-/* Compute next state set from current state set, then apply ε-closure */
-int compute_next(int current_set, char ch)
-{
-    int next = 0;
-    int s;
-    for (s = 0; s < NUM_STATES; s++)
-    {
-        if (current_set & (1 << s))
-            next |= nfa_delta(s, ch);
-    }
-    return epsilon_closure(next);
-}
-
-/* Print state set */
-void print_state_set(int state_set)
-{
-    int s, first = 1;
-    printf("{");
-    if (state_set == 0)
-    {
-        printf("Φ");
-    }
-    else
-    {
-        for (s = 0; s < NUM_STATES; s++)
-        {
-            if (state_set & (1 << s))
-            {
-                if (!first) printf(", ");
-                printf("%s", state_names[s]);
-                first = 0;
-            }
-        }
-    }
-    printf("}");
-}
+/* 
+ * EXPLICIT TRANSITION TABLE
+ * delta \ alphabets | 0 | 1   | ε
+ * ->*q0             | q0| phi | q1
+ *   *q1             |phi| q1  | phi
+ */
+int transition_table[NUM_STATES][3] = {
+    {  q0, PHI,  q1 }, /* State q0 (*q0) */
+    { PHI,  q1, PHI }  /* State q1 (*q1) */
+};
 
 int main()
 {
     int n, m;
     char input[200];
-    int i, len, curr_set;
+    int i, len;
+    enum states curr = q0; /* Starts at q0 */
+    int rejected = 0;
     int choice;
 
     printf("Language L = {0^n 1^m | n, m >= 0} over Σ={0,1}\n\n");
-    printf("Total defined states: {q0, q1}\n\n");
-
+    
     printf("Choose input method:\n");
     printf("1. Enter custom string\n");
     printf("2. Generate string using n and m variables\n");
@@ -95,27 +41,11 @@ int main()
 
     if (choice == 1)
     {
-        printf("Enter any string from Σ={0,1}:\n");
+        printf("Enter any string from Σ={0,1} (leave empty for ε):\n");
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0';
-        len = strlen(input);
-
-        /* Validate alphabet */
-        for (i = 0; i < len; i++)
-        {
-            if (input[i] != '0' && input[i] != '1')
-            {
-                printf("Cannot process string outside of Σ={0,1}.\n");
-                return 1;
-            }
-        }
-
-        if (len == 0)
-            printf("\nCustom string: ε (empty string)\n");
-        else
-            printf("\nCustom string: \"%s\"\n", input);
     }
-    else
+    else if (choice == 2)
     {
         printf("Enter value of n (number of 0s, n >= 0): ");
         if (scanf("%d", &n) != 1 || n < 0)
@@ -131,99 +61,116 @@ int main()
         }
 
         /* Construct string 0^n 1^m */
-        len = n + m;
-        if (len >= (int)sizeof(input))
+        if (n + m >= (int)sizeof(input))
         {
             printf("String too long.\n");
             return 1;
         }
+        int idx = 0;
         for (i = 0; i < n; i++)
-            input[i] = '0';
-        for (i = n; i < len; i++)
-            input[i] = '1';
-        input[len] = '\0';
-
-        if (len == 0)
+            input[idx++] = '0';
+        for (i = 0; i < m; i++)
+            input[idx++] = '1';
+        input[idx] = '\0';
+        
+        if (idx == 0)
             printf("\nConstructed string: ε (empty string)\n");
         else
             printf("\nConstructed string: \"%s\"\n", input);
     }
-
-    printf("\nInitial state: ->*q0\n");
-    printf("Final states: *q0, *q1\n");
-    printf("ε-transition: *q0 --- (ε) ---> *q1\n");
-
-    /* Compute ε-closure of initial state */
-    curr_set = epsilon_closure(Q0_BIT);
-
-    if (len == 0)
+    else
     {
-        printf("\nEmpty string (ε). Current state set: ");
-        print_state_set(curr_set);
-        printf("\n");
-        printf("The string \"ε\" is accepted by ε-NFA.\n");
-        return 0;
+        printf("Invalid choice.\n");
+        return 1;
     }
-    printf("\nProcessing the strings:\n");
 
-    /* Show initial ε-closure: q0 --ε--> q1 always happens at the start */
-    printf("*q0 --- (ε) ---> *q1\n");
+    len = strlen(input);
 
     for (i = 0; i < len; i++)
     {
-        /* Calculate the actual next state mathematically */
-        int next_set = compute_next(curr_set, input[i]);
-
-        /* Print transition traces from current state set */
-        if (curr_set == (Q0_BIT | Q1_BIT))
+        if (input[i] != '0' && input[i] != '1')
         {
-            if (input[i] == '0')
-            {
-                printf("*q0 --- (0) ---> *q0\n");
-                printf("*q1 --- (0) ---> Φ\n");
-                printf("*q0 --- (ε) ---> *q1\n");
-            }
-            else if (input[i] == '1')
-            {
-                printf("*q0 --- (1) ---> Φ\n");
-                printf("*q1 --- (1) ---> *q1\n");
-            }
+            printf("Cannot process string outside of Σ={0,1}.\n");
+            return 1;
         }
-        else if (curr_set == Q0_BIT)
-        {
-            if (input[i] == '0')
-            {
-                printf("*q0 --- (0) ---> *q0\n");
-                printf("*q0 --- (ε) ---> *q1\n");
-            }
-            else if (input[i] == '1')
-            {
-                printf("*q0 --- (1) ---> Φ\n");
-            }
-        }
-        else if (curr_set == Q1_BIT)
-        {
-            if (input[i] == '0')
-            {
-                printf("*q1 --- (0) ---> Φ\n");
-            }
-            else if (input[i] == '1')
-            {
-                printf("*q1 --- (1) ---> *q1\n");
-            }
-        }
-        else if (curr_set == 0)
-        {
-            printf("Φ --- (%c) ---> Φ\n", input[i]);
-        }
-
-        curr_set = next_set;
     }
 
-    if (curr_set & ACCEPTING)
-        printf("The string \"%s\" is accepted by the ε-NFA.\n", input);
+    printf("\nTotal defined states: {*q0, *q1}\n");
+    printf("Initial state: ->*q0\n");
+    printf("Final states: *q0, *q1\n");
+    
+    if (len == 0)
+        printf("Processing the string \"ε\":\n");
     else
+        printf("Processing the string \"%s\":\n", input);
+
+    for (i = 0; i < len; i++)
+    {
+        char ch = input[i];
+        int c_idx = (ch == '0') ? 0 : 1;
+        
+        /* Look up the standard character transition in the table */
+        int next = transition_table[curr][c_idx];
+
+        if (next != PHI)
+        {
+            /* Valid direct transition found */
+            printf("%s --- (%c) ---> %s\n", 
+                   (curr == q0) ? "->*q0" : "*q1", ch, state_names[next]);
+            curr = next;
+        }
+        else
+        {
+            /* Direct transition is PHI. Check if an epsilon jump can save the path */
+            int eps_next = transition_table[curr][2];
+            
+            if (eps_next != PHI)
+            {
+                /* Take the epsilon jump */
+                printf("%s --- (ε) ---> %s\n", 
+                       (curr == q0) ? "->*q0" : "*q1", state_names[eps_next]);
+                curr = eps_next;
+
+                /* Retry the character from the new state */
+                next = transition_table[curr][c_idx];
+                
+                if (next != PHI)
+                {
+                    printf("%s --- (%c) ---> %s\n", 
+                           (curr == q0) ? "->*q0" : "*q1", ch, state_names[next]);
+                    curr = next;
+                }
+                else
+                {
+                    /* Even after epsilon jump, it's a dead end */
+                    printf("%s --- (%c) ---> Φ\n", 
+                           (curr == q0) ? "->*q0" : "*q1", ch);
+                    rejected = 1;
+                    break;
+                }
+            }
+            else
+            {
+                /* No epsilon jump available, true dead end */
+                printf("%s --- (%c) ---> Φ\n", 
+                       (curr == q0) ? "->*q0" : "*q1", ch);
+                rejected = 1;
+                break;
+            }
+        }
+    }
+
+    if (!rejected && (curr == q0 || curr == q1))
+    {
+        if (len == 0)
+            printf("The empty string \"ε\" is accepted by the ε-NFA.\n");
+        else
+            printf("The string \"%s\" is accepted by the ε-NFA.\n", input);
+    }
+    else
+    {
         printf("The string \"%s\" is not accepted by the ε-NFA.\n", input);
+    }
 
     return 0;
 }
