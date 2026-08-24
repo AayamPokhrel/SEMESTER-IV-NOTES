@@ -5,7 +5,6 @@ enum states { q0, q1, qd };
 
 const char *state_str[] = { "->q0", " *q1", "  qd" };
 
-/* C keywords list */
 const char *keywords[] = {
     "auto", "break", "case", "char", "const", "continue", "default", "do",
     "double", "else", "enum", "extern", "float", "for", "goto", "if",

@@ -7,15 +7,9 @@ enum states { q0, q1, NUM_STATES };
 
 const char *state_names[] = { "*q0", "*q1" };
 
-/* 
- * EXPLICIT TRANSITION TABLE
- * delta \ alphabets | 0 | 1   | ε
- * ->*q0             | q0| phi | q1
- *   *q1             |phi| q1  | phi
- */
 int transition_table[NUM_STATES][3] = {
-    {  q0, PHI,  q1 }, /* State q0 (*q0) */
-    { PHI,  q1, PHI }  /* State q1 (*q1) */
+    {  q0, PHI,  q1 },
+    { PHI,  q1, PHI }
 };
 
 int main()
@@ -23,7 +17,7 @@ int main()
     int n, m;
     char input[200];
     int i, len;
-    enum states curr = q0; /* Starts at q0 */
+    enum states curr = q0;
     int rejected = 0;
     int choice;
 
@@ -35,7 +29,6 @@ int main()
     printf("Enter choice (1 or 2): ");
     if (scanf("%d", &choice) != 1) return 1;
 
-    /* Clear input buffer */
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 
@@ -60,7 +53,6 @@ int main()
             return 1;
         }
 
-        /* Construct string 0^n 1^m */
         if (n + m >= (int)sizeof(input))
         {
             printf("String too long.\n");
@@ -109,29 +101,24 @@ int main()
         char ch = input[i];
         int c_idx = (ch == '0') ? 0 : 1;
         
-        /* Look up the standard character transition in the table */
         int next = transition_table[curr][c_idx];
 
         if (next != PHI)
         {
-            /* Valid direct transition found */
             printf("%s --- (%c) ---> %s\n", 
                    (curr == q0) ? "->*q0" : "*q1", ch, state_names[next]);
             curr = next;
         }
         else
         {
-            /* Direct transition is PHI. Check if an epsilon jump can save the path */
             int eps_next = transition_table[curr][2];
             
             if (eps_next != PHI)
             {
-                /* Take the epsilon jump */
                 printf("%s --- (ε) ---> %s\n", 
                        (curr == q0) ? "->*q0" : "*q1", state_names[eps_next]);
                 curr = eps_next;
 
-                /* Retry the character from the new state */
                 next = transition_table[curr][c_idx];
                 
                 if (next != PHI)
@@ -142,7 +129,6 @@ int main()
                 }
                 else
                 {
-                    /* Even after epsilon jump, it's a dead end */
                     printf("%s --- (%c) ---> Φ\n", 
                            (curr == q0) ? "->*q0" : "*q1", ch);
                     rejected = 1;
@@ -151,7 +137,6 @@ int main()
             }
             else
             {
-                /* No epsilon jump available, true dead end */
                 printf("%s --- (%c) ---> Φ\n", 
                        (curr == q0) ? "->*q0" : "*q1", ch);
                 rejected = 1;

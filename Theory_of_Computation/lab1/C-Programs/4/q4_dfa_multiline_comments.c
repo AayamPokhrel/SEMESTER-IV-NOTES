@@ -11,20 +11,20 @@ enum states delta(enum states s, char ch)
     {
         case q0:
             if (ch == '/') return q1;
-            return qd; /* '*' or any other char */
+            return qd;
         case q1:
             if (ch == '*') return q2;
-            return qd; /* '/' or any other char (// is single-line comment, rejected) */
+            return qd;
         case q2:
             if (ch == '*') return q3;
-            return q2; /* '/' or any other char stays in q2 */
+            return q2;
         case q3:
             if (ch == '/') return q4;
             if (ch == '*') return q3;
-            return q2; /* any other char goes back to q2 */
+            return q2;
         case q4:
-            if (ch == '/') return q1; /* can start another comment */
-            return qd; /* '*' or any other char */
+            if (ch == '/') return q1;
+            return qd;
         case qd:
             return qd;
     }
@@ -41,7 +41,6 @@ int main()
 
     printf("Enter your multi-line comment (press Ctrl+Z on a new line on Windows, or Ctrl+D on Unix to end input):\n");
 
-    /* Read all input until EOF */
     while ((ch = getchar()) != EOF)
     {
         if (len < (int)sizeof(input) - 1)
@@ -49,7 +48,6 @@ int main()
     }
     input[len] = '\0';
 
-    /* Remove trailing newline/carriage return */
     while (len > 0 && (input[len - 1] == '\n' || input[len - 1] == '\r'))
         input[--len] = '\0';
 
@@ -78,7 +76,6 @@ int main()
     for (i = 0; i < len; i++)
     {
         enum states next = delta(curr, input[i]);
-        /* Display special characters with escape notation */
         if (input[i] == '\n')
             printf("%s --- (\\n) ---> %s\n", state_str[curr], state_str[next]);
         else if (input[i] == '\r')

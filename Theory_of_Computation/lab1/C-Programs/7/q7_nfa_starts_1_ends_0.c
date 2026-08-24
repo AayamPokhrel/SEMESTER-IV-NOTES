@@ -11,26 +11,24 @@ const char *state_names[] = { "q0", "q1", "*q2" };
 
 #define ACCEPTING Q2_BIT
 
-/* NFA transition: returns bitmask of next states for a single state */
 int nfa_delta(int state, char ch)
 {
     switch (state)
     {
         case q0:
-            if (ch == '0') return 0;               /* Φ */
-            if (ch == '1') return Q1_BIT;           /* {q1} */
+            if (ch == '0') return 0;
+            if (ch == '1') return Q1_BIT;
             break;
         case q1:
-            if (ch == '0') return Q1_BIT | Q2_BIT;  /* {q1, q2} */
-            if (ch == '1') return Q1_BIT;            /* {q1} */
+            if (ch == '0') return Q1_BIT | Q2_BIT;
+            if (ch == '1') return Q1_BIT;
             break;
         case q2:
-            return 0;  /* Φ for both */
+            return 0;
     }
     return 0;
 }
 
-/* Compute next state set from current state set */
 int compute_next(int current_set, char ch)
 {
     int next = 0;
@@ -43,7 +41,6 @@ int compute_next(int current_set, char ch)
     return next;
 }
 
-/* Print state set */
 void print_state_set(int state_set)
 {
     int s, first = 1;
@@ -77,7 +74,6 @@ int main()
     input[strcspn(input, "\n")] = '\0';
     len = strlen(input);
 
-    /* Validate alphabet */
     for (i = 0; i < len; i++)
     {
         if (input[i] != '0' && input[i] != '1')
@@ -99,7 +95,7 @@ int main()
         return 0;
     }
 
-    curr_set = Q0_BIT; /* Start in {q0} */
+    curr_set = Q0_BIT;
     for (i = 0; i < len; i++)
     {
         int next_set = compute_next(curr_set, input[i]);

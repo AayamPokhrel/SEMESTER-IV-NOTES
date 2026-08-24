@@ -34,7 +34,6 @@ int main()
     input[strcspn(input, "\n")] = '\0';
     len = strlen(input);
 
-    /* Validate alphabet */
     for (i = 0; i < len; i++)
     {
         if (input[i] != '0' && input[i] != '1')

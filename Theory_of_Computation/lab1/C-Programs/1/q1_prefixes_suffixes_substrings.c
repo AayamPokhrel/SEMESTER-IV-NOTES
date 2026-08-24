@@ -23,7 +23,6 @@ int main()
         return 0;
     }
 
-    /* Prefixes */
     printf("\nPrefixes for string \"%s\":\n", input);
     printf("  ε\n");
     for (i = 1; i <= len; i++)
@@ -31,7 +30,6 @@ int main()
         printf("  %.*s\n", i, input);
     }
 
-    /* Suffixes */
     printf("\nSuffixes for string \"%s\":\n", input);
     for (i = 0; i < len; i++)
     {
@@ -39,7 +37,6 @@ int main()
     }
     printf("  ε\n");
 
-    /* Substrings */
     printf("\nSubstrings for string \"%s\":\n", input);
     printf("  ε\n");
     for (i = 0; i < len; i++)

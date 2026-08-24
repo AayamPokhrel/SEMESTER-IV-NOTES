@@ -44,14 +44,12 @@ int main()
     input[strcspn(input, "\n")] = '\0';
     len = strlen(input);
 
-    /* Validate length */
     if (len < 4)
     {
         printf("Input string length must be >= 4.\n");
         return 1;
     }
 
-    /* Validate alphabet */
     for (i = 0; i < len; i++)
     {
         if (input[i] != 'a' && input[i] != 'b')
