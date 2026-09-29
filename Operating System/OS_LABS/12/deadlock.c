@@ -49,6 +49,10 @@ int main() {
 	pthread_create(&t2, NULL, thread2_func, NULL);
 
 	sleep(3);
+	/*instead of sleep to actually lock 
+	pthread_join(t1, NULL);
+    pthread_join(t2, NULL);
+	*/
 
 	printf("\nProgram hung for 3 seconds - deadlock occurred!\n");
 	printf("Thread 1 holds mutex_a, waits for mutex_b\n");
